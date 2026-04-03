@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - DelishHub</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .upi-section {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .upi-id {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #00ffae;
+      margin: 10px 0;
+    }
+    .copy-btn {
+      background-color: #00ffae;
+      border: none;
+      color: #000;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .copy-btn:hover {
+      background-color: #00cc8a;
+    }
+  </style>
+</head>
+<!-- OTP Registration Popup -->
+<div id="otpPopup" class="popup hidden">
+  <div class="popup-box">
+    <h2>Verify Your Mobile</h2>
+
+    <div id="step1">
+      <input type="text" id="phoneInput" placeholder="Enter Mobile Number" maxlength="10">
+      <button class="btn" onclick="sendOTP()">Send OTP</button>
+    </div>
+
+    <div id="step2" class="hidden">
+      <p>OTP sent to <span id="showMobile"></span></p>
+      <input type="text" id="otpInput" placeholder="Enter OTP">
+      <button class="btn" onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <button class="btn small-btn close-btn" onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<body>
+  <header>
+    <h1>🛒 Your Cart</h1>
+    <button id="themeToggle" class="btn small-btn">🌙</button>
+  </header>
+
+  <main class="cart-page">
+    <section id="cartItems" class="cart-list"></section>
+    <h3 id="cartTotal"></h3>
+    <button id="checkoutBtn" class="btn big-btn">Proceed to Checkout</button>
+
+    <!-- Payment Section -->
+    <section id="paymentSection" class="payment" style="display: none;">
+      <h2>Select Payment Method</h2>
+      <div class="payment-options">
+        <label><input type="radio" name="payment" value="Cash" /> 💵 Cash on Delivery</label>
+        <label><input type="radio" name="payment" value="Card" /> 💳 Credit / Debit Card</label>
+        <label><input type="radio" name="payment" value="UPI" /> 📱 UPI Payment</label>
+      </div>
+      <button id="confirmPayment" class="btn big-btn">Confirm Payment</button>
+
+      <!-- UPI Section -->
+      <div id="upiSection" class="upi-section">
+        <h3>📱 Pay Using UPI</h3>
+        <p class="upi-id">UPI ID: <span id="upiIdText">123@axl</span></p>
+        <button class="copy-btn" id="copyUPI">Copy UPI ID</button>
+        <p>Use any UPI app (PhonePe, Google Pay, Paytm, etc.) to send payment.</p>
+      </div>
+
+      <p id="paymentMessage" class="success" style="display: none; margin-top: 15px;"></p>
+    </section>
+  </main>
+
+  <footer>
+    <a href="restaurants.html" class="btn small-btn">⬅ Back to Restaurants</a>
+  </footer>
+
+  <script src="script.js"></script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof setupTheme === "function") setupTheme();
+
+  const cartContainer = document.getElementById("cartItems");
+  const totalElement = document.getElementById("cartTotal");
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  const paymentSection = document.getElementById("paymentSection");
+  const confirmPayment = document.getElementById("confirmPayment");
+  const paymentMessage = document.getElementById("paymentMessage");
+  const paymentOptions = document.querySelectorAll('input[name="payment"]');
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let deliveryCharge = 0;
+  const gstCharge = 15;
+  const platformFee = 15;
+
+  cart = cart.map(item => ({
+    ...item,
+    quantity: item.quantity ? item.quantity : 1
+  }));
+
+  function updateCartDisplay() {
+    cartContainer.innerHTML = "";
+    let baseTotal = 0;
+
+    if (cart.length === 0) {
+      totalElement.textContent = "🛒 Your cart is empty. Payment cannot be processed.";
+      totalElement.style.color = "red";
+      checkoutBtn.disabled = true;
+      checkoutBtn.style.background = "gray";
+      checkoutBtn.style.cursor = "not-allowed";
+      paymentSection.style.display = "none";
+      return;
+    }
+
+    cart.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+      baseTotal += itemTotal;
+
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add("cart-item");
+      itemDiv.innerHTML = `
+        <h4>${item.name}</h4>
+        <p>Price: ₹${item.price}</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="qty-btn" data-index="${index}" data-action="decrease">➖</button>
+          <span>Qty: ${item.quantity}</span>
+          <button class="qty-btn" data-index="${index}" data-action="increase">➕</button>
+        </div>
+        <p><b>Subtotal: ₹${itemTotal.toFixed(2)}</b></p>
+        <hr>
+      `;
+      cartContainer.appendChild(itemDiv);
+    });
+
+    const finalTotal = baseTotal + gstCharge + platformFee + deliveryCharge;
+
+    totalElement.innerHTML = `
+      <p>Cart Total: ₹${baseTotal.toFixed(2)}</p>
+      <p>GST: ₹${gstCharge.toFixed(2)}</p>
+      <p>Platform Fee: ₹${platformFee.toFixed(2)}</p>
+      <p id="deliveryLine">Delivery Charge: ₹${deliveryCharge.toFixed(2)}</p>
+      <hr>
+      <p style="font-size:1.2em;font-weight:bold;color:#00b894;">
+        💰 Final Payable Amount: ₹${finalTotal.toFixed(2)}
+      </p>
+    `;
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  updateCartDisplay();
+
+  cartContainer.addEventListener("click", function (e) {
+    if (e.target.classList.contains("qty-btn")) {
+      const index = e.target.dataset.index;
+      const action = e.target.dataset.action;
+
+      if (action === "increase") {
+        if (cart[index].quantity < 5) {
+          cart[index].quantity++;
+        } else {
+          alert("⚠️ Maximum quantity per item is 5.");
+        }
+      } else if (action === "decrease") {
+        if (cart[index].quantity > 1) {
+          cart[index].quantity--;
+        } else {
+          if (confirm("Remove this item from cart?")) cart.splice(index, 1);
+        }
+      }
+
+      updateCartDisplay();
+    }
+  });
+
+  paymentOptions.forEach(option => {
+    option.addEventListener("change", function () {
+      const selected = this.value;
+      paymentMessage.style.display = "block";
+
+      let baseTotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+      if (selected === "Cash") {
+        if (baseTotal > 1000) {
+          deliveryCharge = 0;
+          paymentMessage.innerHTML = `<span style="color:#28a745;">💵 Cash on Delivery selected — No delivery charge (Order above ₹1000).</span>`;
+        } else {
+          deliveryCharge = 30;
+          paymentMessage.innerHTML = `<span style="color:#d9534f;">💵 Cash on Delivery selected — ₹30 delivery charge added (Orders ≤ ₹1000).</span>`;
+        }
+      } 
+      else if (selected === "UPI") {
+        deliveryCharge = 0;
+        paymentMessage.innerHTML = `
+          <span style="color:green;">📱 Pay via UPI ID: <b></b></span>
+          <button id="copyUpi" style="margin-left:10px; padding:3px 6px; border:none; background:#4CAF50; color:white; border-radius:5px; cursor:pointer;">Copy UPI ID</button>
+        `;
+      } 
+      else if (selected === "Card") {
+        deliveryCharge = 0;
+        paymentMessage.innerHTML = `<span style="color:#0275d8;">💳 Pay securely by Card.</span>`;
+      }
+
+      const finalTotal = baseTotal + gstCharge + platformFee + deliveryCharge;
+
+      totalElement.innerHTML = `
+        <p>Cart Total: ₹${baseTotal.toFixed(2)}</p>
+        <p>GST: ₹${gstCharge.toFixed(2)}</p>
+        <p>Platform Fee: ₹${platformFee.toFixed(2)}</p>
+        <p id="deliveryLine">Delivery Charge: ₹${deliveryCharge.toFixed(2)}</p>
+        <hr>
+        <p style="font-size:1.2em;font-weight:bold;color:#00b894;">
+          💰 Final Payable Amount: ₹${finalTotal.toFixed(2)}
+        </p>
+      `;
+
+      const copyBtn = document.getElementById("copyUpi");
+      if (copyBtn) {
+        copyBtn.addEventListener("click", function () {
+          navigator.clipboard.writeText("8328100664@axl");
+          copyBtn.textContent = "Copied!";
+          copyBtn.style.background = "#2e7d32";
+          setTimeout(() => {
+            copyBtn.textContent = "Copy UPI ID";
+            copyBtn.style.background = "#4CAF50";
+          }, 1500);
+        });
+      }
+    });
+  });
+
+  checkoutBtn.addEventListener("click", function () {
+    if (cart.length === 0) {
+      alert("Your cart is empty! Please add some items before checkout.");
+      return;
+    }
+    paymentSection.style.display = "block";
+    checkoutBtn.style.display = "none";
+  });
+
+  confirmPayment.addEventListener("click", function () {
+    if (cart.length === 0) {
+      alert("Payment cannot be processed for an empty cart!");
+      return;
+    }
+
+    const selected = document.querySelector('input[name="payment"]:checked');
+    if (!selected) {
+      alert("Please select a payment method before confirming.");
+      return;
+    }
+
+    const baseTotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const totalAmount = baseTotal + gstCharge + platformFee + deliveryCharge;
+
+    paymentMessage.innerHTML += `<br><br><b style="color:#28a745;">✅ Payment confirmed! Your order for ₹${totalAmount.toFixed(2)} is being processed. Thank you for choosing DelishHub!</b>`;
+
+    localStorage.removeItem("cart");
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 3000);
+  });
+});
+</script>
+
+
+
+

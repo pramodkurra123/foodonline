@@ -1,0 +1,368 @@
+:root {
+  --bg-color: #f9f9f9;
+  --text-color: #222;
+  --card-bg: #fff;
+  --accent-color: #ff6347;
+  --header-bg: #ff6347;
+}
+
+body.dark {
+  --bg-color: #121212;
+  --text-color: #f1f1f1;
+  --card-bg: #1e1e1e;
+  --accent-color: #ff8800;
+  --header-bg: #222;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+header {
+  background-color: var(--header-bg);
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  background: url('https://source.unsplash.com/1600x600/?food') no-repeat center/cover;
+  color: white;
+}
+
+.btn {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.small-btn {
+  padding: 6px 10px;
+  font-size: 1.1rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  width: 250px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  text-align: center;
+  padding-bottom: 15px;
+  transition: background 0.3s;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: var(--header-bg);
+  color: white;
+}
+/* === HOME PAGE SPECIAL THEME === */
+
+.home-header {
+  background: linear-gradient(90deg, var(--accent-color), #ff3c3c);
+}
+
+.hero-home {
+  position: relative;
+  height: 100vh;
+  background: url('https://source.unsplash.com/1600x900/?food,restaurant') no-repeat center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-home .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.hero-home .hero-content {
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 1.5s ease-in;
+}
+
+.big-btn {
+  font-size: 1.2rem;
+  padding: 15px 35px;
+  background: #ff8800;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.big-btn:hover {
+  background: #ffa733;
+  transform: scale(1.05);
+}
+
+.features {
+  padding: 60px 20px;
+  text-align: center;
+  background: var(--bg-color);
+  transition: background 0.3s;
+}
+
+.features h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+/* Scroll animation */
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 136, 0, 0.7); }
+  70% { box-shadow: 0 0 0 20px rgba(255, 136, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 136, 0, 0); }
+}
+#liveCartSection {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 2px solid var(--accent);
+  background: rgba(0,0,0,0.05);
+  border-radius: 12px;
+}
+
+#liveCartSection h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.btn.small-btn {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+/* Two-column layout for menu and live cart */
+.menu-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+}
+
+.menu-page .left {
+  flex: 1 1 60%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.menu-page .right {
+  flex: 1 1 35%;
+  background: rgba(255, 87, 34, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: sticky;
+  top: 1rem;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+body.light .menu-page .right {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Keep cards nice */
+#liveCartItems .card {
+  margin-bottom: 0.8rem;
+}
+
+#liveCart h2 {
+  margin-bottom: 1rem;
+  color: #ff5722;
+}
+.payment-box {
+  margin: 2rem auto;
+  padding: 1.5rem;
+  text-align: center;
+  background: rgba(255, 87, 34, 0.08);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.payment-box h2 {
+  margin-bottom: 1rem;
+  color: #ff5722;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.payment-options .btn {
+  width: 80%;
+}
+/* OTP Popup */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-box {
+  background: white;
+  padding: 25px;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.popup-box input {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.close-btn {
+  background: #444;
+  margin-top: 10px;
+}
+/* Bottom Slide-Up Login Panel */
+.login-panel {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  background: var(--card-bg);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+  border-radius: 20px 20px 0 0;
+  transition: bottom 0.4s ease-in-out;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.login-panel.active {
+  bottom: 0;
+}
+
+.login-box {
+  text-align: center;
+}
+
+.login-box input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.login-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.login-panel.active {
+    display: flex;
+}
+
+.login-box {
+    background: white;
+    padding: 20px;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.close-btn {
+    margin-top: 10px;
+    background: red;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+}
+
+
+

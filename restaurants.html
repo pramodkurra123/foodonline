@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DelishHub – Vizag Restaurants</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🍴 DelishHub – Vizag's Top Restaurants</h1>
+    <div class="header-right">
+      <button id="themeToggle" class="btn small-btn">🌙</button>
+      <a href="cart.html" class="btn small-btn">🛒 View Cart</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="restaurant-grid">
+      <div class="card">
+        <img src="images/vista.jpg" alt="Vista at The Park" />
+        <h3>Vista @ The Park Visakhapatnam</h3>
+        <p>Luxury dining with sea view & fine continental cuisine.</p>
+        <button class="btn" onclick="openMenu('Vista @ The Park Visakhapatnam')">View Menu</button>
+      </div>
+
+      <div class="card">
+        <img src="images/novotel.jpg" alt="The Square – Novotel" />
+        <h3>The Square – Novotel</h3>
+        <p>Buffet and à la carte with international flavors by the beach.</p>
+        <button class="btn" onclick="openMenu('The Square – Novotel')">View Menu</button>
+      </div>
+
+      <div class="card">
+        <img src="images/eatery.jpg" alt="The Eatery – Four Points" />
+        <h3>The Eatery – Four Points by Sheraton</h3>
+        <p>Modern comfort dining with regional and global favorites.</p>
+        <button class="btn" onclick="openMenu('The Eatery – Four Points by Sheraton')">View Menu</button>
+      </div>
+
+      <div class="card">
+        <img src="images/spicyvenue.jpg" alt="The Spicy Venue" />
+        <h3>The Spicy Venue</h3>
+        <p>Authentic Andhra cuisine with bold flavors and biryanis.</p>
+        <button class="btn" onclick="openMenu('The Spicy Venue')">View Menu</button>
+      </div>
+
+      <div class="card">
+        <img src="images/sairam.jpg" alt="Sri Sairam Parlour" />
+        <h3>Sri Sairam Parlour</h3>
+        <p>Classic vegetarian South Indian tiffins & meals since decades.</p>
+        <button class="btn" onclick="openMenu('Sri Sairam Parlour')">View Menu</button>
+      </div>
+
+      <div class="card">
+        <img src="images/ramaiah.jpg" alt="Ramaiah Vegetarian Meals" />
+        <h3>Ramaiah Vegetarian Meals</h3>
+        <p>Simple, homely Andhra-style vegetarian meals and rice varieties.</p>
+        <button class="btn" onclick="openMenu('Ramaiah Vegetarian Meals')">View Menu</button>
+      </div>
+
+      <div class="card">
+        <img src="images/absolutebbq.jpg" alt="Absolute Barbecues" />
+        <h3>Absolute Barbecues</h3>
+        <p>Live grills, buffets & delicious BBQs for family and friends.</p>
+        <button class="btn" onclick="openMenu('Absolute Barbecues')">View Menu</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>📞 Customer Support: <strong>123456789</strong></p>
+    <p>“Good food is the foundation of genuine happiness.” 🍲</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof setupTheme === "function") setupTheme();
+    });
+
+    function openMenu(name) {
+      localStorage.setItem("selectedRestaurant", name);
+      window.location.href = "menu.html";
+    }
+  </script>
+</body>
+</html>

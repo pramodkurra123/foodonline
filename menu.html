@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1 id="restaurantName">Restaurant Menu</h1>
+    <button id="themeToggle" class="btn small-btn">Toggle Theme</button>
+  </header>
+
+  <main class="menu-page">
+    <!-- Left side: Menu items -->
+    <section id="menuItems" class="menu-list left"></section>
+
+    <!-- Right side: Live Cart -->
+    <aside id="liveCart" class="right">
+      <h2>Your Cart 🛒</h2>
+      <div id="liveCartItems"></div>
+      <h3 id="liveTotal"></h3>
+      <a href="cart.html" class="btn">Go to Checkout</a>
+    </aside>
+  </main>
+
+  <footer>
+    <a href="restaurants.html" class="btn small-btn">⬅ Back to Restaurants</a>
+  </footer>
+
+  <script>
+    // --- Ensure JS waits for DOM ---
+    document.addEventListener("DOMContentLoaded", function () {
+      // Extract restaurant name from URL
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name");
+
+      const restaurantTitle = document.getElementById("restaurantName");
+      const menuContainer = document.getElementById("menuItems");
+
+      if (!name || !restaurantTitle || !menuContainer) return;
+
+      restaurantTitle.textContent = `${name} Menu`;
+
+      const restaurantMenus = {
+        "Pizza Palace": [
+          { name: "Margherita Pizza", price: 250 },
+          { name: "Pepperoni Pizza", price: 300 },
+          { name: "Veg Supreme", price: 280 },
+          { name: "Cheese Burst", price: 320 },
+          { name: "Farmhouse", price: 290 },
+        ],
+        "Burger House": [
+          { name: "Classic Burger", price: 180 },
+          { name: "Double Patty Burger", price: 250 },
+          { name: "Crispy Chicken Burger", price: 220 },
+          { name: "Veggie Delight", price: 200 },
+          { name: "Cheese Melt Burger", price: 240 },
+        ],
+        "Spice Villa": [
+          { name: "Chicken Biryani", price: 280 },
+          { name: "Veg Biryani", price: 220 },
+          { name: "Paneer Butter Masala", price: 200 },
+          { name: "Naan Set", price: 120 },
+          { name: "Tandoori Chicken", price: 300 },
+        ],
+        "Sushi Station": [
+          { name: "Salmon Roll", price: 350 },
+          { name: "Tuna Roll", price: 330 },
+          { name: "Veg Maki", price: 280 },
+          { name: "California Roll", price: 370 },
+          { name: "Tempura Roll", price: 390 },
+        ],
+        "Cafe Aroma": [
+          { name: "Cappuccino", price: 120 },
+          { name: "Espresso", price: 100 },
+          { name: "Iced Latte", price: 150 },
+          { name: "Blueberry Muffin", price: 90 },
+          { name: "Chocolate Donut", price: 80 },
+        ],
+        "Pasta Point": [
+          { name: "Alfredo Pasta", price: 220 },
+          { name: "Arrabbiata Pasta", price: 200 },
+          { name: "Pesto Pasta", price: 230 },
+          { name: "Cheesy Mac", price: 250 },
+          { name: "Veg Penne", price: 210 },
+        ],
+        "Frosty Treats": [
+          { name: "Chocolate Sundae", price: 180 },
+          { name: "Strawberry Cone", price: 100 },
+          { name: "Mango Delight", price: 130 },
+          { name: "Vanilla Scoop", price: 80 },
+          { name: "Brownie Blast", price: 200 },
+        ],
+      };
+
+      const menu = restaurantMenus[name];
+      if (!menu) {
+        menuContainer.innerHTML = "<p>No menu found for this restaurant.</p>";
+        return;
+      }
+
+      menuContainer.innerHTML = menu
+        .map(
+          (item, index) => `
+          <div class="card">
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+            <button class="btn small-btn" onclick="addToCart('${name}', ${index})">Add to Cart</button>
+          </div>`
+        )
+        .join("");
+
+      // Initialize live cart after menu loads
+      if (typeof updateLiveCart === "function") updateLiveCart();
+      if (typeof setupTheme === "function") setupTheme();
+    });
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
